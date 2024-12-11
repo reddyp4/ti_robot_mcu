@@ -48,6 +48,7 @@
 // system includes
 #include <math.h>
 #include "main.h"
+#include "drv8323.h"
 
 #ifdef FLASH
 #pragma CODE_SECTION(mainISR,"ramfuncs");
@@ -60,6 +61,8 @@
 // the defines
 
 #define LED_BLINK_FREQ_Hz   1
+
+#define DRV8323_SPI
 
 
 // **************************************************************************
@@ -120,6 +123,11 @@ DRV_SPI_8301_Vars_t gDrvSpi8301Vars;
 #ifdef DRV8305_SPI
 // Watch window interface to the 8305 SPI
 DRV_SPI_8305_Vars_t gDrvSpi8305Vars;
+#endif
+
+#ifdef DRV8323_SPI
+// Watch window interface to the 8323 SPI
+DRV_SPI_8323_Vars_t gDrvSpi8323Vars;
 #endif
 
 // define CPU time
@@ -317,6 +325,13 @@ void main(void)
   HAL_enableDrv(halHandle);
   // initialize the DRV8305 interface
   HAL_setupDrvSpi(halHandle,&gDrvSpi8305Vars);
+#endif
+
+#ifdef DRV8323_SPI
+  // turn on the DRV8301 if present
+  HAL_enableDrv(halHandle);
+  // initialize the DRV8301 interface
+  HAL_setupDrvSpi(halHandle,&gDrvSpi8323Vars);
 #endif
 
 
@@ -518,6 +533,11 @@ void main(void)
         HAL_writeDrvData(halHandle,&gDrvSpi8305Vars);
 
         HAL_readDrvData(halHandle,&gDrvSpi8305Vars);
+#endif
+#ifdef DRV8323_SPI
+        HAL_writeDrvData(halHandle,&gDrvSpi8323Vars);
+
+        HAL_readDrvData(halHandle,&gDrvSpi8323Vars);
 #endif
       } // end of while(gFlag_enableSys) loop
 
